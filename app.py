@@ -7,8 +7,9 @@ from docx import Document
 import whisper
 import yt_dlp
 import warnings
-warnings.filterwarnings("ignore", message="FP16 is not supported on CPU; using FP32 instead")
 
+# Suprimir avisos do Whisper
+warnings.filterwarnings("ignore", message="FP16 is not supported on CPU; using FP32 instead")
 
 # Configurar o caminho do FFmpeg
 AudioSegment.converter = which("ffmpeg")
@@ -41,8 +42,8 @@ def download_youtube_video(url):
         }],
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info_dict = ydl.extract_info(url, download=True)
-        return "youtube_audio.mp3"
+        ydl.extract_info(url, download=True)
+    return "youtube_audio.mp3"
 
 # Baixar arquivo do Google Drive
 def download_google_drive_file(url):
@@ -63,10 +64,9 @@ def save_as_word(text, filename="transcription.docx"):
     doc.save(filename)
     return filename
 
-
-# Streamlit App
+# Configuração do Streamlit
 st.set_page_config(page_title="Transcrição Inteligente", page_icon="🎙️")
-st.title("🎙️ Bem-vinda ao Áudio Transcript")
+st.title("🎙️ Bem-vindo ao Áudio Transcript")
 st.sidebar.title("Configurações")
 
 # Escolha do modo
@@ -130,7 +130,7 @@ elif mode == "Google Drive":
 # Opções de salvamento
 if transcription:
     with st.expander("💾 Salvar Transcrição"):
-        col1, col2, col3 = st.columns(3)
+        col1, col2 = st.columns(2)
         with col1:
             file_path = save_as_txt(transcription)
             st.download_button(
