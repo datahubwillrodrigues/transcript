@@ -64,10 +64,12 @@ def save_as_word(text, filename="transcription.docx"):
     doc.save(filename)
     return filename
 
+
 # Configuração do Streamlit
 st.set_page_config(page_title="Transcrição Inteligente", page_icon="🎙️")
 st.title("🎙️ Bem-vindo ao Áudio Transcript")
 st.sidebar.title("Configurações")
+
 
 # Escolha do modo
 mode = st.sidebar.radio(
@@ -147,3 +149,6 @@ if transcription:
                 file_name=file_path,
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
             )
+
+if st.button("Reiniciar Aplicativo"):
+    st.experimental_rerun()
