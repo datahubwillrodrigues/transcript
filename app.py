@@ -29,15 +29,28 @@ def transcribe_video(file_path):
     os.remove(audio_path)
     return transcription
 
+# Baixar áudio do YouTube
 def download_youtube_video(url):
     ydl_opts = {
         'format': 'bestaudio/best',
         'outtmpl': 'youtube_audio.%(ext)s',
-        'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3', 'preferredquality': '192'}],
+        'postprocessors': [
+            {
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            },
+        ],
+        'keepvideo': True,  # Mantém o arquivo original caso seja necessário
     }
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        ydl.extract_info(url, download=True)
-    return "youtube_audio.mp3"
+    try:
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            ydl.extract_info(url, download=True)
+        # Retorna o caminho do arquivo convertido para mp3
+        return "youtube_audio.mp3"
+    except Exception as e:
+        raise RuntimeError(f"Erro ao baixar o vídeo do YouTube: {e}")
+
 
 def download_google_drive_file(url):
     file_id = url.split("/d/")[1].split("/")[0]
